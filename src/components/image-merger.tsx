@@ -7,7 +7,6 @@ import { Badge } from './ui/badge';
 import { Loader2, Combine, Download, RefreshCw, Languages, Lightbulb, Plus, FileImage } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { GoogleGenAI, Modality } from '@google/genai';
-import { SmartSuggestions } from './smart-suggestions';
 
 export const ImageMerger: React.FC = () => {
   const [firstImage, setFirstImage] = useState<File | null>(null);
@@ -379,17 +378,56 @@ export const ImageMerger: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Smart Suggestions using shared component */}
-          <SmartSuggestions
-            title="اقتراحات الدمج الذكية"
-            suggestionsPrompt={firstImage && secondImage 
-              ? "قم بتحليل هاتين الصورتين وأعط 5 اقتراحات إبداعية لدمجهما باللغة العربية. كل اقتراح يجب أن يكون عبارة قصيرة تصف كيفية دمج الصورتين (مثل 'ادمج الشخص من الصورة الأولى مع خلفية الصورة الثانية'، 'امزج الصورتين لتكوين مشهد سريالي'، إلخ). أرجع الاقتراحات فقط، واحد في كل سطر، بدون أرقام أو نص إضافي."
-              : "قم بإنشاء 5 اقتراحات إبداعية لدمج الصور باللغة العربية. كل اقتراح يجب أن يكون عبارة قصيرة تصف كيفية دمج صورتين (مثل 'ادمج الصورتين في مشهد واحد'، 'ضع الشخص من الصورة الأولى في خلفية الصورة الثانية'، إلخ). أرجع الاقتراحات فقط، واحد في كل سطر، بدون أرقام أو نص إضافي."
-            }
-            onSuggestionClick={addSuggestionToPrompt}
-            isEnabled={!!firstImage && !!secondImage}
-            context="دمج الصور"
-          />
+          {/* Smart Suggestions */}
+          <Card className="bg-gradient-card shadow-elegant">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 arabic-text">
+                <Lightbulb className="w-5 h-5" />
+                اقتراحات الدمج الذكية
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                onClick={getSuggestions}
+                disabled={!firstImage || !secondImage || isGettingSuggestions}
+                variant="outline"
+                className="w-full arabic-text"
+              >
+                {isGettingSuggestions ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    جاري الحصول على اقتراحات جديدة...
+                  </>
+                ) : (
+                  <>
+                    <Lightbulb className="w-4 h-4 mr-2" />
+                    احصل على اقتراحات ذكية جديدة
+                  </>
+                )}
+              </Button>
+              
+              {suggestions.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground arabic-text">
+                    انقر على أي اقتراح لإضافته:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {suggestions.map((suggestion, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-smooth arabic-text p-2 text-xs border border-border/20 hover:border-primary/50"
+                        onClick={() => addSuggestionToPrompt(suggestion)}
+                      >
+                        <Plus className="w-3 h-3 ml-1" />
+                        {suggestion}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Merge Prompt Input */}
           <Card className="bg-gradient-card shadow-elegant">

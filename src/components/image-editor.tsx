@@ -9,12 +9,7 @@ import { Label } from './ui/label';
 import { Loader2, Wand2, Download, RefreshCw, Languages, Search, Type, Plus, Palette, Eye, Target, Scissors, Grid3X3, Copy, Square, Edit, Check, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { GoogleGenAI, Modality } from '@google/genai';
-import { BackgroundRemover } from './background-remover';
 import { ImageMerger } from './image-merger';
-import { FurnitureEditor } from './furniture-editor';
-import { VideoGenerator } from './video-generator';
-import { SmartSuggestions } from './smart-suggestions';
-import { SpeechGenerator } from './speech-generator';
 
 export const ImageEditor: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -712,24 +707,12 @@ export const ImageEditor: React.FC = () => {
       </div>
 
       <Tabs defaultValue="gemini" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 mb-6">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="gemini" className="arabic-text">
             تحرير بـ Gemini AI
           </TabsTrigger>
-          <TabsTrigger value="video" className="arabic-text">
-            إنشاء الفيديو
-          </TabsTrigger>
-          <TabsTrigger value="furniture" className="arabic-text">
-            محرر الأثاث الذكي
-          </TabsTrigger>
           <TabsTrigger value="merge" className="arabic-text">
             دمج الصور
-          </TabsTrigger>
-          <TabsTrigger value="background" className="arabic-text">
-            إزالة الخلفية
-          </TabsTrigger>
-          <TabsTrigger value="speech" className="arabic-text">
-            تحويل النص لكلام
           </TabsTrigger>
         </TabsList>
 
@@ -1063,21 +1046,6 @@ export const ImageEditor: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Smart Suggestions */}
-              <SmartSuggestions
-                title="اقتراحات التحرير الذكية"
-                suggestionsPrompt="قم بإنشاء 5 اقتراحات إبداعية لتحرير الصور باللغة العربية. كل اقتراح يجب أن يكون عبارة قصيرة تصف كيفية تحرير أو تحسين الصورة (مثل 'أضف غروب شمس جميل في الخلفية'، 'غير لون السماء إلى الوردي'، 'أضف تأثير المطر'، إلخ). أرجع الاقتراحات فقط، واحد في كل سطر، بدون أرقام أو نص إضافي."
-                onSuggestionClick={(suggestion) => {
-                  if (prompt.trim()) {
-                    setPrompt(prompt + ' ' + suggestion);
-                  } else {
-                    setPrompt(suggestion);
-                  }
-                }}
-                isEnabled={!!selectedFile}
-                context="تحرير الصور"
-              />
-
               {/* Image Style Selection */}
               <Card className="bg-gradient-card shadow-elegant">
                 <CardHeader>
@@ -1197,24 +1165,8 @@ export const ImageEditor: React.FC = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="video">
-          <VideoGenerator />
-        </TabsContent>
-
-        <TabsContent value="furniture">
-          <FurnitureEditor />
-        </TabsContent>
-
         <TabsContent value="merge">
           <ImageMerger />
-        </TabsContent>
-
-        <TabsContent value="background">
-          <BackgroundRemover />
-        </TabsContent>
-
-        <TabsContent value="speech">
-          <SpeechGenerator />
         </TabsContent>
       </Tabs>
     </div>
