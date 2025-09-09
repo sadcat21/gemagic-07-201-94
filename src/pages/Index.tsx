@@ -1,4 +1,4 @@
-import { SimplifiedImageEditor } from "@/components/simplified-image-editor";
+import { ImageEditor } from "@/components/image-editor";
 
 const Index = () => {
   return (
@@ -14,7 +14,7 @@ const Index = () => {
           </p>
         </div>
         
-        <SimplifiedImageEditor />
+        <ImageEditor />
       </div>
     </div>
   );
